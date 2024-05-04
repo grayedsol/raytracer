@@ -1,0 +1,71 @@
+#include <iostream>
+
+typedef unsigned int uint;
+template<typename T, uint N>
+struct GRY_Vec {
+private:
+    T data[N];
+public:
+    T& operator[](const size_t i) { return data[i]; }
+    const T& operator[](const size_t i) const { return data[i]; }
+};
+
+template<typename T>
+struct GRY_Vec<T,3> {
+private:
+    T data[3];
+public:
+    GRY_Vec() {}
+    GRY_Vec(T x, T y, T z) {
+        data[0] = x; data[1] = y; data[2] = z;
+    }
+    T& operator[](const size_t i) { return data[i]; }
+    const T& operator[](const size_t i) const { return data[i]; }
+};
+
+typedef GRY_Vec<float,3> Vec3f;
+
+template<typename T, uint N>
+GRY_Vec<T,N> operator+(const GRY_Vec<T,N>& lhs, const GRY_Vec<T,N>& rhs) {
+    GRY_Vec<T,N> ret;
+    for (uint i = 0; i < N; i++) { ret[i] = lhs[i] + rhs[i]; }
+    return ret;
+}
+
+template<typename T, uint N>
+GRY_Vec<T,N> operator-(const GRY_Vec<T,N>& lhs, const GRY_Vec<T,N>& rhs) {
+    GRY_Vec<T,N> ret;
+    for (uint i = 0; i < N; i++) { ret[i] = lhs[i] - rhs[i]; }
+    return ret;
+}
+
+template<typename T, typename K, uint N>
+GRY_Vec<T,N> operator*(const GRY_Vec<T,N>& vec, const K& scalar) {
+    GRY_Vec<T,N> ret;
+    for (uint i = 0; i < N; i++) { ret[i] = vec[i] * scalar; }
+    return ret;
+}
+
+template<typename T, uint N>
+T GRY_VecDot(GRY_Vec<T,N> lhs, GRY_Vec<T,N> rhs) {
+    T sum = 0;
+    for (uint i = 0; i < N; i++) { sum += lhs[i] * rhs[i]; }
+    return sum;
+}
+
+template<typename T>
+GRY_Vec<T,3> GRY_VecCross(GRY_Vec<T,3>& lhs, GRY_Vec<T,3>& rhs) {
+    GRY_Vec<T,3> ret;
+    ret[0] = lhs[1]*rhs[2] - lhs[2]*rhs[1];
+    ret[1] = lhs[2]*rhs[0] - lhs[0]*rhs[2];
+    ret[2] = lhs[0]*rhs[1] - lhs[1]*rhs[0];
+    return ret;
+}
+
+template<typename T, uint N>
+std::ostream& operator<<(std::ostream& out, const GRY_Vec<T,N>& vec) {
+    for (uint i = 0; i < N; i++) {
+        out << vec[i] << " ";
+    }
+    return out;
+}
