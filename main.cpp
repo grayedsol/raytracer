@@ -11,12 +11,12 @@ void render() {
 
     for (uint i = 0; i < height; i++) {
         for (uint j = 0; j < width; j++) {
-            frameBuffer[i*width+j] = Vec3f(j/(float)width, i/(float)height, 0);
+            frameBuffer[i*width+j] = Vec3f(i/(float)height, j/(float)width, 0);
         }
     }
 
     std::ofstream ofs;
-    ofs.open("./out.ppm");
+    ofs.open("./output/out.ppm");
     ofs << "P6\n" << width << " " << height << "\n255\n";
     for (uint i = 0; i < width * height; i++) {
         for (uint j = 0; j < 3; j++) {
