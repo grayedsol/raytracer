@@ -1,5 +1,5 @@
 #pragma once
-#include <iostream>
+#include <cmath>
 
 typedef unsigned int uint;
 template<typename T, uint N>
@@ -48,19 +48,40 @@ GRY_Vec<T,N> operator*(const GRY_Vec<T,N>& vec, const K& scalar) {
 }
 
 template<typename T, uint N>
-T GRY_VecDot(GRY_Vec<T,N> lhs, GRY_Vec<T,N> rhs) {
+T GRY_VecLengthSq(const GRY_Vec<T,N>& vec) {
+    T sum = 0;
+    for (uint i = 0; i < N; i++) { sum += vec[i] * vec[i]; }
+    return sum;
+}
+
+template<typename T, uint N>
+T GRY_VecDistanceSq(const GRY_Vec<T,N>& lhs, const GRY_Vec<T,N>& rhs) {
+    T sum = 0;
+    for (uint i = 0; i < N; i++) {
+        sum += (lhs[i] - rhs[i]) * (lhs[i] - rhs[i]);
+    }
+    return sum;
+}
+
+template<typename T, uint N>
+T GRY_VecDot(const GRY_Vec<T,N>& lhs, const GRY_Vec<T,N>& rhs) {
     T sum = 0;
     for (uint i = 0; i < N; i++) { sum += lhs[i] * rhs[i]; }
     return sum;
 }
 
 template<typename T>
-GRY_Vec<T,3> GRY_VecCross(GRY_Vec<T,3>& lhs, GRY_Vec<T,3>& rhs) {
+GRY_Vec<T,3> GRY_VecCross(const GRY_Vec<T,3>& lhs, const GRY_Vec<T,3>& rhs) {
     GRY_Vec<T,3> ret;
     ret[0] = lhs[1]*rhs[2] - lhs[2]*rhs[1];
     ret[1] = lhs[2]*rhs[0] - lhs[0]*rhs[2];
     ret[2] = lhs[0]*rhs[1] - lhs[1]*rhs[0];
     return ret;
+}
+
+template<uint N>
+GRY_Vec<float,N> GRY_VecNormalize(const GRY_Vec<float,N>& vec) {
+    return vec * (1.0f / sqrtf(GRY_VecLengthSq(vec)));
 }
 
 template<typename T, uint N>
