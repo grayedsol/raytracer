@@ -1,2 +1,5 @@
 # Build folder
 [Bb]uild/
+
+# Visual Studio Code folder
+.vscode/
