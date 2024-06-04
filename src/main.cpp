@@ -33,9 +33,10 @@ void drawGradient(Vec3f frameBuffer[imgSize]) {
 
 void drawSpheres(const std::vector<Sphere>& spheres, const Vec3f& origin, const std::vector<Vec3f>& rays, std::vector<Vec3f>& frameBuffer) {
     Vec3f material;
+    Vec3f point;
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            if (rayIntersect(spheres, origin, rays.at(i*width+j), material)) {
+            if (rayIntersect(spheres, origin, rays.at(i*width+j), point, material)) {
                 frameBuffer.at(i*width+j) = material;
             }
         }
