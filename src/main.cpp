@@ -3,6 +3,7 @@
 #include <vector>
 #include "gryvec.hpp"
 #include "sphere.hpp"
+#include "lightSource.hpp"
 
 const uint width = 1024;
 const uint height = 768;
@@ -31,12 +32,12 @@ void drawGradient(Vec3f frameBuffer[imgSize]) {
     }
 }
 
-void drawSpheres(const std::vector<Sphere>& spheres, const Vec3f& origin, const std::vector<Vec3f>& rays, std::vector<Vec3f>& frameBuffer) {
+void drawSpheres(const std::vector<Sphere>& spheres, const std::vector<lightSource>& lights, const Vec3f& origin, const std::vector<Vec3f>& rays, std::vector<Vec3f>& frameBuffer) {
     Vec3f material;
     Vec3f point;
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
-            if (rayIntersect(spheres, origin, rays.at(i*width+j), point, material)) {
+            if (rayIntersect(spheres, lights, origin, rays.at(i*width+j), point, material)) {
                 frameBuffer.at(i*width+j) = material;
             }
         }
@@ -58,6 +59,7 @@ int main() {
     std::vector<Vec3f> frameBuffer(imgSize);
     std::vector<Vec3f> rayVecs(imgSize);
     std::vector<Sphere> spheres;
+    std::vector<lightSource> lights;
 
     Vec3f origin(0,0,0);
     spheres.push_back(Sphere{ Vec3f(2048, 500, 500), 400, Vec3f(0, 0, 1) });
@@ -68,11 +70,13 @@ int main() {
     spheres.push_back(Sphere{ Vec3f(1000, 225, -250), 100, Vec3f(0.1, 0, 0.5) });
     spheres.push_back(Sphere{ Vec3f(1000, -400, 300), 300, Vec3f(0.4, 0.25, 0.5) });
 
+    lights.push_back(lightSource{ Vec3f(500, 250, -500), 1.0f });
+
     createRayVecs(rayVecs.data(), origin);
 
     drawGradient(frameBuffer.data());
 
-    drawSpheres(spheres, origin, rayVecs, frameBuffer);
+    drawSpheres(spheres, lights, origin, rayVecs, frameBuffer);
 
     Vec3f& debugVec = frameBuffer.at(393214);
     float f = GRY_VecLengthSq(debugVec);

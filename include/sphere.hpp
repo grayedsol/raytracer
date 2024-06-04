@@ -1,5 +1,6 @@
 #pragma once
 #include "gryvec.hpp"
+#include "lightSource.hpp"
 #include <vector>
 
 struct Sphere {
@@ -44,7 +45,7 @@ struct Sphere {
 //     return leastDistance != -1.0f;
 // }
 
-bool rayIntersect(const std::vector<Sphere>& spheres, const Vec3f& origin, const Vec3f& ray, Vec3f& point, Vec3f& color) {
+bool rayIntersect(const std::vector<Sphere>& spheres, const std::vector<lightSource>& lights, const Vec3f& origin, const Vec3f& ray, Vec3f& point, Vec3f& color) {
     float leastDistanceToHit = -1.0f;
     for (auto& sphere : spheres) {
         Vec3f toSphere = sphere.center - origin;
@@ -62,8 +63,18 @@ bool rayIntersect(const std::vector<Sphere>& spheres, const Vec3f& origin, const
 
         if (distanceToHit < leastDistanceToHit || leastDistanceToHit == -1.0f) {
             leastDistanceToHit = distanceToHit;
-            color = sphere.color;
             point = origin + (ray * distanceToHit);
+            Vec3f hitDirFromSphere = GRY_VecNormalize(point - sphere.center);
+
+            float intensity = 0.0f;
+            for (auto& light : lights) {
+                Vec3f lightDir = GRY_VecNormalize(light.position - point);
+                float dotProd = GRY_VecDot(lightDir, hitDirFromSphere);
+                if (dotProd <= 0) { continue; }
+                intensity += light.intensity * dotProd;
+            }
+
+            color = sphere.color * intensity;
         }
     }
     return leastDistanceToHit != -1.0f;
