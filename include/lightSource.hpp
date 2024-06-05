@@ -1,7 +1,7 @@
 #pragma once
-#include "gryvec.hpp"
+#include "GRY_Vec.hpp"
 
-struct lightSource {
+struct LightSource {
     Vec3f position;
     float intensity;
 };

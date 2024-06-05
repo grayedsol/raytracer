@@ -1,87 +1,31 @@
 #include <iostream>
-#include <fstream>
-#include <vector>
-#include "gryvec.hpp"
-#include "sphere.hpp"
-#include "lightSource.hpp"
+#include "Scene.hpp"
+#include "GRY_View.hpp"
 
 const uint width = 1024;
 const uint height = 768;
-const uint imgSize = width * height;
 const uint distanceFromScreen = 512;
 
-void createRayVecs(Vec3f rayVecs[imgSize], const Vec3f& origin = Vec3f(0,0,0)) {
-    int halfWidth = width / 2; int halfHeight = height / 2;
-
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            rayVecs[i*width+j] = Vec3f(distanceFromScreen, halfHeight - i, j - halfWidth);
-        }
-    }
-
-    for (int i = 0; i < imgSize; i++) {
-        rayVecs[i] = GRY_VecNormalize(rayVecs[i]);
-    }
-}
-
-void drawGradient(Vec3f frameBuffer[imgSize]) {
-    for (uint i = 0; i < height; i++) {
-        for (uint j = 0; j < width; j++) {
-            frameBuffer[i*width+j] = Vec3f(i/(float)height, j/(float)width, 0);
-        }
-    }
-}
-
-void drawSpheres(const std::vector<Sphere>& spheres, const std::vector<lightSource>& lights, const Vec3f& origin, const std::vector<Vec3f>& rays, std::vector<Vec3f>& frameBuffer) {
-    Vec3f material;
-    Vec3f point;
-    for (int i = 0; i < height; i++) {
-        for (int j = 0; j < width; j++) {
-            if (rayIntersect(spheres, lights, origin, rays.at(i*width+j), point, material)) {
-                frameBuffer.at(i*width+j) = material;
-            }
-        }
-    }
-}
-
-void render(Vec3f frameBuffer[imgSize]) {
-    std::ofstream image("image.ppm", std::ios::out | std::ios::binary);
-    image << "P6\n" << width << " " << height << "\n255\n";
-    for (uint i = 0; i < imgSize; i++) {
-        for (uint j = 0; j < 3; j++) {
-            image << (char)(255 * frameBuffer[i][j]);
-        }
-    }
-    image.close();
-}
-
 int main() {
-    std::vector<Vec3f> frameBuffer(imgSize);
-    std::vector<Vec3f> rayVecs(imgSize);
-    std::vector<Sphere> spheres;
-    std::vector<lightSource> lights;
+    Scene scene;
+    GRY_Ppm ppm(width, height);
+    GRY_View view(ppm, distanceFromScreen);
 
-    Vec3f origin(0,0,0);
-    spheres.push_back(Sphere{ Vec3f(2048, 500, 500), 400, Vec3f(0, 0, 1) });
-    spheres.push_back(Sphere{ Vec3f(2048, 150, 150), 150, Vec3f(0, 0.5, 0.5) });
-    spheres.push_back(Sphere{ Vec3f(1500, 500, 500), 50, Vec3f(0.5, 0.5, 0) });
-    spheres.push_back(Sphere{ Vec3f(750, -200, -200), 50, Vec3f(0.1, 0.4, 0.1) });
-    spheres.push_back(Sphere{ Vec3f(1000, 250, -400), 100, Vec3f(0.9, 0.9, 0.4) });
-    spheres.push_back(Sphere{ Vec3f(1000, 225, -250), 100, Vec3f(0.1, 0, 0.5) });
-    spheres.push_back(Sphere{ Vec3f(1000, -400, 300), 300, Vec3f(0.4, 0.25, 0.5) });
+    scene.spheres.push_back(Sphere{ Vec3f(2048, 500, 500), 400, GRY_Color{0,0,255,255} });
+    scene.spheres.push_back(Sphere{ Vec3f(2048, 150, 150), 150, GRY_Color{0,128,128,255}  });
+    scene.spheres.push_back(Sphere{ Vec3f(1500, 500, 500), 50, GRY_Color{128,128,0,255}  });
+    scene.spheres.push_back(Sphere{ Vec3f(750, -200, -200), 50, GRY_Color{26,100,26,255}  });
+    scene.spheres.push_back(Sphere{ Vec3f(1000, 250, -400), 100, GRY_Color{230,230,100,255} });
+    scene.spheres.push_back(Sphere{ Vec3f(1000, 225, -250), 100, GRY_Color{26,0,128,255} });
+    scene.spheres.push_back(Sphere{ Vec3f(1000, -400, 300), 300, GRY_Color{100,64,128,255} });
 
-    lights.push_back(lightSource{ Vec3f(500, 250, -500), 1.0f });
+    scene.lights.push_back(LightSource{ Vec3f(1000, 0, 0), 1.0f });
 
-    createRayVecs(rayVecs.data(), origin);
+    ppm.drawGradient();
 
-    drawGradient(frameBuffer.data());
+    scene.drawScene(view.origin, view.rays, ppm);
 
-    drawSpheres(spheres, lights, origin, rayVecs, frameBuffer);
-
-    Vec3f& debugVec = frameBuffer.at(393214);
-    float f = GRY_VecLengthSq(debugVec);
-
-    render(frameBuffer.data());
+    ppm.render();
 
     return 0;
 }

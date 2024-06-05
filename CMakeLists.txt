@@ -5,7 +5,10 @@ project(raytracer VERSION 0.1)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-set(SOURCES src/main.cpp)
+set(SOURCES src/main.cpp
+    src/Scene.cpp
+    src/Sphere.cpp
+    )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 

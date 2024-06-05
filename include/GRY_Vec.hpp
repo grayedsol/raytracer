@@ -84,10 +84,10 @@ GRY_Vec<float,N> GRY_VecNormalize(const GRY_Vec<float,N>& vec) {
     return vec * (1.0f / sqrtf(GRY_VecLengthSq(vec)));
 }
 
-template<typename T, uint N>
-std::ostream& operator<<(std::ostream& out, const GRY_Vec<T,N>& vec) {
-    for (uint i = 0; i < N; i++) {
-        out << vec[i] << " ";
-    }
-    return out;
-}
+// template<typename T, uint N>
+// std::ostream& operator<<(std::ostream& out, const GRY_Vec<T,N>& vec) {
+//     for (uint i = 0; i < N; i++) {
+//         out << vec[i] << " ";
+//     }
+//     return out;
+// }
