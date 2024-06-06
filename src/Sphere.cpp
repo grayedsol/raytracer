@@ -4,35 +4,20 @@
 bool rayIntersect(const std::vector<Sphere>& spheres, const std::vector<Light>& lights, const Vec3f& origin, const Vec3f& ray, Vec3f& point, GRY_Color& color) {
     float leastDistanceToHit = -1.0f;
     for (auto& sphere : spheres) {
-        Vec3f toSphere = sphere.center - origin;
-        float dotProd = GRY_VecDot(toSphere, ray);
-        if (dotProd <= 0) { continue; }
+        float dc = GRY_VecDot(ray, sphere.center);
+        if (dc <= 0) { continue; }
 
-        Vec3f pc = ray * dotProd;
-        float inDistance = GRY_VecDistanceSq(sphere.center, pc);
-        float hypotenuse = sphere.radius * sphere.radius;
-        if (inDistance >= hypotenuse) { continue; }
-        float side1 = GRY_VecDistanceSq(sphere.center, pc);
-        float side3 = sqrtf(hypotenuse - side1);
-        float distanceToHit = sqrtf(GRY_VecDistanceSq(origin, pc)) - side3;
-        
+        float discriminant = (dc * dc) - GRY_VecDot(sphere.center, sphere.center) + (sphere.radius * sphere.radius);
+        if (discriminant < 0) { continue; }
 
-        if (distanceToHit < leastDistanceToHit || leastDistanceToHit == -1.0f) {
-            leastDistanceToHit = distanceToHit;
-            point = origin + (ray * distanceToHit);
+        float t = dc;
+        if (discriminant > 0) { t -= sqrtf(discriminant); }
 
-            color = phongReflect(lights, sphere, point, origin, ray);
-            // Vec3f hitDirFromSphere = GRY_VecNormalize(point - sphere.center);
-
-            // float intensity = 0.0f;
-            // for (auto& light : lights) {
-            //     Vec3f lightDir = GRY_VecNormalize(light.position - point);
-            //     float dotProd = GRY_VecDot(lightDir, hitDirFromSphere);
-            //     if (dotProd <= 0) { continue; }
-            //     intensity += light.intensity * dotProd;
-            // }
-
-            // color = (sphere.material.color * intensity);
+        if (t < leastDistanceToHit || leastDistanceToHit == -1.0f) {
+            leastDistanceToHit = t;
+            point = origin + (ray * t);
+            Vec3f N = GRY_VecNormalize(point - sphere.center);
+            color = phongReflect(lights, sphere.material, N, point, origin, ray);
         }
     }
     return leastDistanceToHit != -1.0f;
