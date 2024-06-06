@@ -7,7 +7,7 @@ struct GRY_View {
     Vec3f origin;
 
     GRY_View(const GRY_Ppm& ppm, const int distanceFromScreen, Vec3f origin = Vec3f{0,0,0}) :
-        rays(ppm.width*ppm.height) {
+        origin(origin), rays(ppm.width*ppm.height) {
         int halfWidth = ppm.width / 2; int halfHeight = ppm.height / 2;
 
         for (int i = 0; i < ppm.height; i++) {
