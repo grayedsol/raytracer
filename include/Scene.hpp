@@ -4,7 +4,7 @@
 
 struct Scene {
     std::vector<Sphere> spheres;
-    std::vector<LightSource> lights;
+    std::vector<Light> lights;
 
     void drawScene(const Vec3f& origin, const std::vector<Vec3f>& rays, GRY_Ppm& ppm);
 };

@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(SOURCES src/main.cpp
     src/Scene.cpp
     src/Sphere.cpp
+    src/BlinnPhong.cpp
     )
 
 add_executable(${PROJECT_NAME} ${SOURCES})
