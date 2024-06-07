@@ -23,7 +23,7 @@ int main() {
 
     ppm.drawGradient();
 
-    scene.drawScene(view.origin, view.rays, ppm);
+    scene.drawScene(view, ppm);
 
     ppm.render();
 

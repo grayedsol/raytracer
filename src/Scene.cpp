@@ -1,13 +1,11 @@
 #include "Scene.hpp"
 
-void Scene::drawScene(const Vec3f& origin, const std::vector<Vec3f>& rays, GRY_Ppm& ppm) {
+void Scene::drawScene(const GRY_View& view, GRY_Ppm& ppm) {
     GRY_Color color;
     Vec3f point;
-    for (int i = 0; i < ppm.height; i++) {
-        for (int j = 0; j < ppm.width; j++) {
-            if (rayIntersect(spheres, lights, origin, rays.at(i*ppm.width+j), point, color)) {
-                ppm.frameBuffer.at(i*ppm.width+j) = color;
-            }
+    for (int i = 0; i < view.rays.size(); i++) {
+        if (rayIntersect(spheres, lights, view.origin, view.rays.at(i), point, color)) {
+            ppm.frameBuffer.at(i) = color;
         }
     }
 }
