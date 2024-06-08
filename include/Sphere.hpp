@@ -1,5 +1,5 @@
 #pragma once
-#include "LightSource.hpp"
+#include "Light.hpp"
 #include "GRY_Material.hpp"
 #include <vector>
 
