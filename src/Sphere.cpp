@@ -3,6 +3,7 @@
 
 bool rayIntersect(const std::vector<Sphere>& spheres, const std::vector<Light>& lights, const Vec3f& origin, const Vec3f& ray, Vec3f& point, GRY_Color& color) {
     float leastDistanceToHit = -1.0f;
+    const Sphere* hitSphere = nullptr;
     for (auto& sphere : spheres) {
         float dc = GRY_VecDot(ray, sphere.center);
         if (dc <= 0) { continue; }
@@ -13,12 +14,16 @@ bool rayIntersect(const std::vector<Sphere>& spheres, const std::vector<Light>& 
         float t = dc;
         if (discriminant > 0) { t -= sqrtf(discriminant); }
 
-        if (t < leastDistanceToHit || leastDistanceToHit == -1.0f) {
+        if (t < leastDistanceToHit || leastDistanceToHit < 0) {
             leastDistanceToHit = t;
-            point = origin + (ray * t);
-            Vec3f N = GRY_VecNormalize(point - sphere.center);
-            color = phongReflect(lights, sphere.material, N, point, origin, ray);
+            hitSphere = &sphere;
         }
     }
-    return leastDistanceToHit != -1.0f;
+    if (hitSphere) {
+        point = origin + (ray * leastDistanceToHit);
+        Vec3f N = GRY_VecNormalize(point - hitSphere->center);
+        color = blinnPhong(lights, hitSphere->material, N, point, origin, ray);
+        return true;
+    }
+    return false;
 }
