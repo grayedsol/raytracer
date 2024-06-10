@@ -4,5 +4,5 @@
 struct GRY_Material {
     GRY_Color color;
     float diffuse = 1.0f;
-    float specular = 100.0f;
+    float specular = .75f;
 };

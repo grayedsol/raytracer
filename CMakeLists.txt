@@ -9,6 +9,7 @@ set(SOURCES src/main.cpp
     src/Scene.cpp
     src/Sphere.cpp
     src/BlinnPhong.cpp
+    src/GRY_Color.cpp
     )
 
 add_executable(${PROJECT_NAME} ${SOURCES})

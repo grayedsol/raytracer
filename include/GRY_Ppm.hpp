@@ -13,7 +13,12 @@ struct GRY_Ppm {
     void render() {
         std::ofstream image("image.ppm", std::ios::binary);
         image << "P6\n" << width << " " << height << "\n255\n";
-        for (auto& pixel : frameBuffer) { image << pixel.r << pixel.g << pixel.b; }
+        GRY_Color::mapToRange(frameBuffer.data(), frameBuffer.size());
+        for (auto& pixel : frameBuffer) { image <<
+            (uint8_t)(pixel.r * 255.0f) <<
+            (uint8_t)(pixel.g * 255.0f) <<
+            (uint8_t)(pixel.b * 255.0f);
+        }
         image.close();
     }
 
@@ -21,8 +26,8 @@ struct GRY_Ppm {
         for (uint i = 0; i < height; i++) {
             for (uint j = 0; j < width; j++) {
                 frameBuffer[i*width+j] = GRY_Color{
-                    (uint8_t)(i/(float)height*255),
-                    (uint8_t)(j/(float)width*255),
+                    i/(float)height,
+                    j/(float)width,
                     0
                 };
             }
