@@ -2,7 +2,7 @@
 #include "GRY_Color.hpp"
 
 struct GRY_Material {
-    GRY_Color color;
-    float diffuse = 1.0f;
-    float specular = .75f;
+    GRY_Color diffuseColor;
+    GRY_Color specularColor = GRY_White;
+    float shine = 15.0f;
 };

@@ -5,15 +5,46 @@ struct GRY_Color {
     float r;
     float g;
     float b;
-    float a;
+    float a = 1.0f;
 
     GRY_Color operator*(float scalar) const {
-        return GRY_Color {
+        return GRY_Color{
             (r * scalar),
             (g * scalar),
             (b * scalar),
             a
         };
+    }
+
+    GRY_Color operator*(const GRY_Color& rhs) const {
+        return GRY_Color{
+            r * rhs.r,
+            g * rhs.g,
+            b * rhs.b,
+            a
+        };
+    }
+
+    void operator*=(const GRY_Color& rhs) {
+        r *= rhs.r;
+        g *= rhs.g;
+        b *= rhs.b;
+    }
+
+
+    GRY_Color operator+(const GRY_Color& rhs) const {
+        return GRY_Color{
+            r + rhs.r,
+            g + rhs.g,
+            b + rhs.b,
+            a
+        };
+    }
+
+    void operator+=(const GRY_Color& rhs) {
+        r += rhs.r;
+        g += rhs.g;
+        b += rhs.b;
     }
 
     /**

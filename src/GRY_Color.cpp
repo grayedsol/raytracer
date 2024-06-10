@@ -1,7 +1,7 @@
 #include "GRY_Color.hpp"
 #include "cstddef"
 
-GRY_Color GRY_Black = GRY_Color{1.0f,1.0f,1.0f,1.0f};
+GRY_Color GRY_Black = GRY_Color{0.0f,0.0f,0.0f,1.0f};
 GRY_Color GRY_White = GRY_Color{1.0f,1.0f,1.0f,1.0f};
 GRY_Color GRY_Blue = GRY_Color{.0f,.0f,1.0f,1.0f};
 GRY_Color GRY_Red = GRY_Color{1.0f,.0f,.0f,1.0f};
