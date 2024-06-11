@@ -58,6 +58,7 @@ struct GRY_Color {
 
 extern GRY_Color GRY_Black;
 extern GRY_Color GRY_White;
+extern GRY_Color GRY_Gray;
 extern GRY_Color GRY_Blue;
 extern GRY_Color GRY_Red;
 extern GRY_Color GRY_Green;
