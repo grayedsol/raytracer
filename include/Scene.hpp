@@ -7,4 +7,7 @@ struct Scene {
     std::vector<Light> lights;
 
     void drawScene(const GRY_View& view, GRY_Ppm& ppm);
+
+private:
+    bool castRay(const Vec3f& origin, const Vec3f& nRay, GRY_Color& color);
 };
