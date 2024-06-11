@@ -9,4 +9,6 @@ struct Sphere {
     GRY_Material material;
 };
 
-bool rayIntersectSphere(const Sphere& sphere, const Vec3f& nRay, float& distance);
+bool rayIntersectSphere(const Sphere& sphere, const Vec3f& nRay, float* distance = nullptr);
+
+bool rayIntersectSphere(const Sphere& sphere, const Vec3f& nRay, const Vec3f& rayOrigin, float* distance = nullptr);
