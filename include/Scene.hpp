@@ -3,6 +3,7 @@
 #include "GRY_View.hpp"
 
 struct Scene {
+    static const int reflectionLimit = 4;
     std::vector<Sphere> spheres;
     std::vector<Light> lights;
 
@@ -12,4 +13,6 @@ struct Scene {
 
 private:
     bool castRay(const Vec3f& origin, const Vec3f& nRay, GRY_Color& color);
+
+    bool castRayReflect(const Vec3f& origin, const Vec3f& nRay, GRY_Color& color, int reflect = 0);
 };
