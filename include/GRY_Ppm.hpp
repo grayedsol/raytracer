@@ -23,8 +23,8 @@ struct GRY_Ppm {
     }
 
     void drawGradient() {
-        for (uint i = 0; i < height; i++) {
-            for (uint j = 0; j < width; j++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 frameBuffer[i*width+j] = GRY_Color{
                     i/(float)height,
                     j/(float)width,
