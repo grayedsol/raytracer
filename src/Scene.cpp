@@ -12,40 +12,10 @@ void Scene::drawScene(const GRY_View& view, GRY_Ppm& ppm) {
     }
 }
 
-bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color) {
+bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, int reflect) {
     float leastDistanceToHit = -1.0f;
     const Sphere* hitSphere = nullptr;
-    for (auto& sphere : spheres) {
-        float distance;
-        if (rayIntersectSphere(sphere, nRay, &distance) && 
-            (distance < leastDistanceToHit || leastDistanceToHit < 0.0f)) {
-            leastDistanceToHit = distance;
-            hitSphere = &sphere;
-        }
-    }
-    if (hitSphere) {
-        Vec3f point = origin + (nRay * leastDistanceToHit);
-        Vec3f N = GRY_VecNormalize(point - hitSphere->center);
-        if (hitSphere->material.reflect) {
-            Vec3f reflectRay = nRay + (N * GRY_VecDot(nRay, N) * -2.0f);
-            Vec3f reflectOrigin = GRY_VecDot(reflectRay, N) < 0 ? point - (N * 0.0001f) : point + (N * 0.0001f);
-            if (castRayReflect(reflectOrigin, reflectRay, color)) {
-                GRY_Material mat = hitSphere->material;
-                mat.diffuseColor = color;
-                color = blinnPhong(this, mat, N, point, origin, nRay);
-            }
-            else {
-                color = blinnPhong(this, hitSphere->material, N, point, origin, nRay);
-            }
-        }
-        else { color = blinnPhong(this, hitSphere->material, N, point, origin, nRay); }
-    }
-    return hitSphere;
-}
 
-bool Scene::castRayReflect(const Vec3f &origin, const Vec3f &nRay, GRY_Color &color, int reflect) {
-    float leastDistanceToHit = -1.0f;
-    const Sphere* hitSphere = nullptr;
     for (auto& sphere : spheres) {
         float distance;
         if (rayIntersectSphere(sphere, nRay, origin, &distance) && 
@@ -54,23 +24,20 @@ bool Scene::castRayReflect(const Vec3f &origin, const Vec3f &nRay, GRY_Color &co
             hitSphere = &sphere;
         }
     }
+
     if (hitSphere) {
         Vec3f point = origin + (nRay * leastDistanceToHit);
         Vec3f N = GRY_VecNormalize(point - hitSphere->center);
+        GRY_Material mat = hitSphere->material;
         if (hitSphere->material.reflect && reflect < reflectionLimit) {
             Vec3f reflectRay = nRay + (N * GRY_VecDot(nRay, N) * -2.0f);
             Vec3f reflectOrigin = GRY_VecDot(reflectRay, N) < 0 ? point - (N * 0.0001f) : point + (N * 0.0001f);
-            if (castRayReflect(reflectOrigin, reflectRay, color)) {
-                GRY_Material mat = hitSphere->material;
-                mat.diffuseColor = color;
-                color = blinnPhong(this, mat, N, point, origin, nRay);
-            }
-            else {
-                color = blinnPhong(this, hitSphere->material, N, point, origin, nRay);
-            }       
+
+            if (castRay(reflectOrigin, reflectRay, color, reflect+1)) { mat.diffuseColor = color; }
         }
-        else { color = blinnPhong(this, hitSphere->material, N, point, origin, nRay); }
+        color = blinnPhong(this, mat, N, point, origin, nRay);
     }
+    
     return hitSphere;
 }
 

@@ -12,7 +12,5 @@ struct Scene {
     bool castRay(const Vec3f& origin, const Vec3f& nRay) const;
 
 private:
-    bool castRay(const Vec3f& origin, const Vec3f& nRay, GRY_Color& color);
-
-    bool castRayReflect(const Vec3f& origin, const Vec3f& nRay, GRY_Color& color, int reflect = 0);
+    bool castRay(const Vec3f& origin, const Vec3f& nRay, GRY_Color& color, int reflect = 0);
 };
