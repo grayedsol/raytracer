@@ -11,7 +11,7 @@ int main() {
     GRY_Ppm ppm(width, height);
     GRY_View view(ppm, distanceFromScreen);
 
-    scene.spheres.push_back(Sphere{ Vec3f(500, -100, -100), 150, GRY_Material{GRY_Color{.0f,.0f,1.0f,1.0f}, GRY_White, 21.0f, false, true, 2.0f} });
+    scene.spheres.push_back(Sphere{ Vec3f(500, 100, 250), 125, GRY_Material{GRY_Color{.0f,.0f,1.0f,1.0f}, GRY_White, 21.0f, true, true, 2.0f} });
     scene.spheres.push_back(Sphere{ Vec3f(2048, 0, 0), 150, GRY_Material{GRY_Color{1.0f,.25f,.25f,1.0f}}  });
     scene.spheres.push_back(Sphere{ Vec3f(750, -200, -200), 50, GRY_Material{GRY_Color{.1f,.7f,.1f,1.0f}}  });
     scene.spheres.push_back(Sphere{ Vec3f(1000, 250, -400), 100, GRY_Material{GRY_Color{.9f,.9f,.325f,1.0f}} });
