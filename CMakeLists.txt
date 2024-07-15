@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(SOURCES src/main.cpp
     src/Scene.cpp
     src/Sphere.cpp
+    src/Plane.cpp
     src/BlinnPhong.cpp
     src/GRY_Color.cpp
     )
