@@ -16,6 +16,7 @@ void Scene::drawScene(const GRY_View& view, GRY_Ppm& ppm) {
 bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, int reflect) {
     float leastDistanceToHit = -1.0f;
     const Sphere* hitSphere = nullptr;
+    const Plane* hitPlane = nullptr;
 
     for (auto& sphere : spheres) {
         float distance;
@@ -24,6 +25,15 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
             leastDistanceToHit = distance;
             hitSphere = &sphere;
         }
+    }
+    for (auto& plane : planes) {
+        float distance;
+        if (rayIntersectPlane(plane, nRay, origin, &distance) &&
+            (distance < leastDistanceToHit || leastDistanceToHit < 0.0f && distance >= 0.0f)) {
+                hitSphere = nullptr;
+                leastDistanceToHit = distance;
+                hitPlane = &plane;
+            }
     }
 
     if (hitSphere) {
@@ -51,13 +61,31 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
         }
         color = blinnPhong(this, mat, N, point, origin, nRay);
     }
+
+    else if (hitPlane) {
+        Vec3f point = origin + (nRay * leastDistanceToHit);
+        Vec3f N = hitPlane->n;
+        GRY_Material mat = hitPlane->material;
+        color = blinnPhong(this, mat, N, point, origin, nRay);
+    }
     
-    return hitSphere;
+    return hitSphere || hitPlane;
 }
 
-bool Scene::castRay(const Vec3f& origin, const Vec3f& nRay) const {
+bool Scene::castRay(const Vec3f& origin, const Vec3f& nRay, const float* withinDistance) const {
+    float distance;
     for (auto& sphere : spheres) {
-        if (rayIntersectSphere(sphere, nRay, origin)) { return true; }
+        if (rayIntersectSphere(sphere, nRay, origin, &distance)) {
+            if (withinDistance && distance > *withinDistance) { return false; }
+            return true;
+        }
     }
+    for (auto& plane : planes) {
+        if (rayIntersectPlane(plane, nRay, origin, &distance)) {
+            if (withinDistance && distance > *withinDistance) { return false; }
+            return true;
+        }
+    }
+
     return false;
 }

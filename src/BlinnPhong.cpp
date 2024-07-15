@@ -14,7 +14,8 @@ GRY_Color phong(const Scene* scene, const GRY_Material& material, const Vec3f& N
         Vec3f L = GRY_VecNormalize(light.position - point);
 
         Vec3f shadowPoint = GRY_VecDot(L, N) < 0 ? point - N*0.001f : point + N*0.001f;
-        if (scene->castRay(shadowPoint, L)) { continue; }
+        float withinDistance = sqrtf(GRY_VecDistanceSq(shadowPoint, light.position));
+        if (scene->castRay(shadowPoint, L, &withinDistance)) { continue; }
 
         /* Reflection of L on point */
         Vec3f R = N * (2 * std::max(0.0f, GRY_VecDot(L, N))) - L;
@@ -37,7 +38,8 @@ GRY_Color blinnPhong(const Scene* scene, const GRY_Material& material, const Vec
         Vec3f L = GRY_VecNormalize(light.position - point);
 
         Vec3f shadowPoint = GRY_VecDot(L, N) < 0 ? point - N*0.001f : point + N*0.001f;
-        if (scene->castRay(shadowPoint, L)) { continue; }
+        float withinDistance = sqrtf(GRY_VecDistanceSq(shadowPoint, light.position));
+        if (scene->castRay(shadowPoint, L, &withinDistance)) { continue; }
 
         /* H as a point */
         Vec3f hPoint = (light.position + origin) * 0.5f;
