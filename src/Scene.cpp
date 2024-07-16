@@ -64,7 +64,7 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
 
     else if (hitPlane) {
         Vec3f point = origin + (nRay * leastDistanceToHit);
-        Vec3f N = hitPlane->n;
+        Vec3f N = hitPlane->n * (GRY_VecDot(nRay, hitPlane->n) > 0 ? -1.0f : 1.0f);
         GRY_Material mat = hitPlane->material;
         color = blinnPhong(this, mat, N, point, origin, nRay);
     }
