@@ -40,6 +40,7 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
     if (hitSphere) {
         Vec3f point = origin + (nRay * leastDistanceToHit);
         Vec3f N = GRY_VecNormalize(point - hitSphere->center);
+        if (GRY_VecDot(nRay, N) > 0.f) { N = N * -1.f; }
         GRY_Material mat = hitSphere->material;
 
         Vec3f eRay = nRay;
