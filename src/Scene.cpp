@@ -21,7 +21,8 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
     for (auto& sphere : spheres) {
         float distance;
         if (rayIntersectSphere(sphere, nRay, origin, &distance) && 
-            (distance < leastDistanceToHit || (leastDistanceToHit < 0.f && distance >= 0.f))) {
+            ((distance < leastDistanceToHit || leastDistanceToHit < 0.f) && distance > 0.1f)) {
+            hitPlane = nullptr;
             leastDistanceToHit = distance;
             hitSphere = &sphere;
         }
@@ -29,7 +30,7 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
     for (auto& plane : planes) {
         float distance;
         if (rayIntersectPlane(plane, nRay, origin, &distance) &&
-            (distance < leastDistanceToHit || (leastDistanceToHit < 0.f && distance >= 0.f))) {
+            ((distance < leastDistanceToHit || leastDistanceToHit < 0.f) && distance > 0.1f)) {
                 hitSphere = nullptr;
                 leastDistanceToHit = distance;
                 hitPlane = &plane;
@@ -60,6 +61,20 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
         Vec3f point = origin + (nRay * leastDistanceToHit);
         Vec3f N = hitPlane->n * (GRY_VecDot(nRay, hitPlane->n) > 0.f ? -1.f : 1.f);
         GRY_Material mat = hitPlane->material;
+
+        Vec3f eRay = nRay;
+        if (reflect < reflectionLimit && (hitPlane->material.reflect || hitPlane->material.refract)) {
+            if (hitPlane->material.refract) {
+                eRay = GRY_VecRefract(eRay, N, 1.f, hitPlane->material.refractIndex);
+                if (hitPlane->material.reflect) { eRay = eRay * -1.f; }
+            }
+            if (hitPlane->material.reflect) {
+                eRay = GRY_VecReflect(eRay, N);
+            }
+            Vec3f eOrigin = GRY_VecDot(eRay, N) < 0.f ? point - (N * 1e-3f) : point + (N * 1e-3f);
+            if (castRay(eOrigin, eRay, color, reflect+1)) { mat.diffuseColor = color; }
+        }
+
         color = blinnPhong(this, mat, N, point, origin, nRay);
     }
     
