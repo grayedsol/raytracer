@@ -54,7 +54,6 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
         if (reflect < reflectionLimit && (mat.reflect || mat.refract)) {
             if (mat.refract) {
                 eRay = GRY_VecRefract(eRay, N, 1.f, mat.refractIndex);
-                //if (!mat.reflect) { eRay *= -1.f; }
             }
             if (mat.reflect) {
                 eRay = GRY_VecReflect(eRay, N);
