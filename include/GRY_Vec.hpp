@@ -37,10 +37,20 @@ GRY_Vec<T,N> operator+(const GRY_Vec<T,N>& lhs, const GRY_Vec<T,N>& rhs) {
 }
 
 template<typename T, uint N>
+GRY_Vec<T,N> operator+=(GRY_Vec<T,N>& lhs, const GRY_Vec<T,N>& rhs) {
+    for (uint i = 0; i < N; i++) { lhs[i] += rhs[i]; }
+}
+
+template<typename T, uint N>
 GRY_Vec<T,N> operator-(const GRY_Vec<T,N>& lhs, const GRY_Vec<T,N>& rhs) {
     GRY_Vec<T,N> ret;
     for (uint i = 0; i < N; i++) { ret[i] = lhs[i] - rhs[i]; }
     return ret;
+}
+
+template<typename T, uint N>
+GRY_Vec<T,N> operator-=(GRY_Vec<T,N>& lhs, const GRY_Vec<T,N>& rhs) {
+    for (uint i = 0; i < N; i++) { lhs[i] -= rhs[i]; }
 }
 
 template<typename T, typename K, uint N>
@@ -48,6 +58,11 @@ GRY_Vec<T,N> operator*(const GRY_Vec<T,N>& vec, const K& scalar) {
     GRY_Vec<T,N> ret;
     for (uint i = 0; i < N; i++) { ret[i] = vec[i] * scalar; }
     return ret;
+}
+
+template<typename T, typename K, uint N>
+void operator*=(GRY_Vec<T,N>& vec, const K& scalar) {
+    for (uint i = 0; i < N; i++) { vec[i] *= scalar; }
 }
 
 template<typename T, uint N>
