@@ -13,7 +13,7 @@ GRY_Color phong(const Scene* scene, const GRY_Material& material, const Vec3f& N
         /* Vector from hit to light source */
         Vec3f L = GRY_VecNormalize(light.position - point);
 
-        Vec3f shadowPoint = GRY_VecDot(L, N) < 0 ? point - N*0.001f : point + N*0.001f;
+        Vec3f shadowPoint = GRY_VecDot(L, N) < 0 ? point - N*0.01f : point + N*0.01f;
         float withinDistance = sqrtf(GRY_VecDistanceSq(shadowPoint, light.position));
         if (scene->castRay(shadowPoint, L, &withinDistance)) { continue; }
 
