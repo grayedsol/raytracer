@@ -23,8 +23,8 @@ public:
     GRY_Vec(T x, T y, T z) {
         data[0] = x; data[1] = y; data[2] = z;
     }
-    T& operator[](const size_t i) { return data[i]; }
-    const T& operator[](const size_t i) const { return data[i]; }
+    T& operator[](const uint i) { return data[i]; }
+    const T& operator[](const uint i) const { return data[i]; }
 };
 
 typedef GRY_Vec<float,3> Vec3f;
