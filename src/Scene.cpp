@@ -54,7 +54,7 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
         if (reflect < reflectionLimit && (mat.reflect || mat.refract)) {
             if (mat.refract) {
                 eRay = GRY_VecRefract(eRay, N, 1.f, mat.refractIndex);
-                if (mat.reflect) { eRay *= -1.f; }
+                //if (!mat.reflect) { eRay *= -1.f; }
             }
             if (mat.reflect) {
                 eRay = GRY_VecReflect(eRay, N);
@@ -72,7 +72,7 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
 bool Scene::castRay(const Vec3f& origin, const Vec3f& nRay, const float* withinDistance) const {
     float distance;
     for (auto& sphere : spheres) {
-        if (rayIntersectSphere(sphere, nRay, origin, &distance)) {
+        if (rayIntersectSphere(sphere, nRay, origin, &distance) && !sphere.material.refract) {
             if (withinDistance && distance > *withinDistance) { continue; }
             return true;
         }

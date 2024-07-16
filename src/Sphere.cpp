@@ -10,6 +10,7 @@ bool rayIntersectSphere(const Sphere &sphere, const Vec3f &nRay, const Vec3f &ra
 
     if (distance) {
         float sqrtDiscriminant = sqrtf(discriminant);
+        if (sphere.material.refract && dc < sqrtDiscriminant) { return false; }
         *distance = dc > sqrtDiscriminant ? dc - sqrtDiscriminant : dc + sqrtDiscriminant;
     }
     return true;

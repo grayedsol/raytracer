@@ -15,16 +15,16 @@ int main() {
     scene.spheres.push_back(Sphere{ Vec3f(1200, -300, -300), 75, GRY_Material{GRY_Color{.1f,.7f,.1f,1.f}}  });
     scene.spheres.push_back(Sphere{ Vec3f(1000, 250, -400), 100, GRY_Material{GRY_Color{.9f,.9f,.325f,1.f}} });
     scene.spheres.push_back(Sphere{ Vec3f(1000, 225, -250), 100, GRY_Material{GRY_Color{.1f,.1f,.5f,1.f}} });
-    scene.spheres.push_back(Sphere{ Vec3f(1000, -400, 300), 250, GRY_Material{GRY_Color{.125f,.125f,.5f,1.f}} });
+    scene.spheres.push_back(Sphere{ Vec3f(900, -0, 200), 250, GRY_Material{GRY_Color{.125f,.125f,.5f,1.f}, GRY_White, 15.f, false, true, 2.3f} });
     scene.spheres.push_back(Sphere{ Vec3f(1500, 200, -800), 350, GRY_Material{GRY_Color{.8f,.2f,.5f,1.f}, GRY_White, 15.f}  });
     scene.spheres.push_back(Sphere{ Vec3f(3000, 1250, 500), 500, GRY_Material{GRY_Color{1.f,.5f,0.f,1.f}, GRY_White, 15.f} });
     scene.spheres.push_back(Sphere{ Vec3f(1500, 300, 500), 300, GRY_Material{GRY_Color{0.f,0.f,1.f,1.f}, GRY_White, 21.f, false, false, 1.05f} });
 
     scene.planes.push_back(Plane{ Vec3f(0,0,-1), 2000, GRY_Material{GRY_Color{.25f,.25f,.75f,1.f}} });
-    scene.planes.push_back(Plane{ Vec3f(0,-1,0), 500, GRY_Material{GRY_Color{1.f,1.f,0.f,1.f}, GRY_White, 15.f, true} });
+    scene.planes.push_back(Plane{ Vec3f(0,-1,0), 500, GRY_Material{GRY_Color{1.f,1.f,0.f,1.f}, GRY_White} });
     scene.planes.push_back(Plane{ Vec3f(0,1,0), 2500, GRY_Material{GRY_Color{1.f,.25f,.25f,1.f}} });
     scene.planes.push_back(Plane{ Vec3f(-1,0,0), 5000, GRY_Material{GRY_Color{.75f,0.f,.75f,1.f}} });
-    scene.planes.push_back(Plane{ Vec3f(1,0,0), 5000, GRY_Material{GRY_Color{.25f,.75f,.75f,1.f}, GRY_White, 45.0f} });
+    scene.planes.push_back(Plane{ Vec3f(1,0,0), 5000, GRY_Material{GRY_Color{.25f,.75f,.75f,1.f}, GRY_Color{.25f,.25f,.25f,1.f}} });
     scene.planes.push_back(Plane{ Vec3f(0,0,1), 2000, GRY_Material{GRY_Color{.25f,.75f,.25f,1.f}} });
 
     scene.lights.push_back(Light{ Vec3f(50, 750, -1500), .75f /* , GRY_Color{0.1f,0.3f,1.f} */});
