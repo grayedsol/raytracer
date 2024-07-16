@@ -18,7 +18,7 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
     const Sphere* hitSphere = nullptr;
     const Plane* hitPlane = nullptr;
 
-    for (auto& sphere : spheres) {
+    for (const auto& sphere : spheres) {
         float distance;
         if (rayIntersectSphere(sphere, nRay, origin, &distance) && 
             ((distance < leastDistanceToHit || leastDistanceToHit < 0.f) && distance > 0.1f)) {
@@ -26,7 +26,7 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
             hitSphere = &sphere;
         }
     }
-    for (auto& plane : planes) {
+    for (const auto& plane : planes) {
         float distance;
         if (rayIntersectPlane(plane, nRay, origin, &distance) &&
             ((distance < leastDistanceToHit || leastDistanceToHit < 0.f) && distance > 0.1f)) {
@@ -70,13 +70,13 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
 
 bool Scene::castRay(const Vec3f& origin, const Vec3f& nRay, const float* withinDistance) const {
     float distance;
-    for (auto& sphere : spheres) {
+    for (const auto& sphere : spheres) {
         if (rayIntersectSphere(sphere, nRay, origin, &distance) && !sphere.material.refract) {
             if (withinDistance && distance > *withinDistance) { continue; }
             return true;
         }
     }
-    for (auto& plane : planes) {
+    for (const auto& plane : planes) {
         if (rayIntersectPlane(plane, nRay, origin, &distance)) {
             if (withinDistance && distance > *withinDistance) { continue; }
             return true;
