@@ -22,7 +22,6 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
         float distance;
         if (rayIntersectSphere(sphere, nRay, origin, &distance) && 
             ((distance < leastDistanceToHit || leastDistanceToHit < 0.f) && distance > 0.1f)) {
-            hitPlane = nullptr;
             leastDistanceToHit = distance;
             hitSphere = &sphere;
         }
@@ -37,39 +36,27 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
             }
     }
 
-    if (hitSphere) {
+    if (hitSphere || hitPlane) {
         Vec3f point = origin + (nRay * leastDistanceToHit);
-        Vec3f N = GRY_VecNormalize(point - hitSphere->center);
-        if (GRY_VecDot(nRay, N) > 0.f) { N = N * -1.f; }
-        GRY_Material mat = hitSphere->material;
-
-        Vec3f eRay = nRay;
-        if (reflect < reflectionLimit && (hitSphere->material.reflect || hitSphere->material.refract)) {
-            if (hitSphere->material.refract) {
-                eRay = GRY_VecRefract(eRay, N, 1.f, hitSphere->material.refractIndex);
-                if (hitSphere->material.reflect) { eRay = eRay * -1.f; }
-            }
-            if (hitSphere->material.reflect) {
-                eRay = GRY_VecReflect(eRay, N);
-            }
-            Vec3f eOrigin = GRY_VecDot(eRay, N) < 0.f ? point - (N * 1e-3f) : point + (N * 1e-3f);
-            if (castRay(eOrigin, eRay, color, reflect+1)) { mat.diffuseColor = color; }
+        Vec3f N;
+        GRY_Material mat;
+        if (hitSphere) {
+            N = GRY_VecNormalize(point - hitSphere->center);
+            if (GRY_VecDot(nRay, N) > 0.f) { N *= -1.f; }
+            mat = hitSphere->material;
         }
-        color = blinnPhong(this, mat, N, point, origin, nRay);
-    }
-
-    else if (hitPlane) {
-        Vec3f point = origin + (nRay * leastDistanceToHit);
-        Vec3f N = hitPlane->n * (GRY_VecDot(nRay, hitPlane->n) > 0.f ? -1.f : 1.f);
-        GRY_Material mat = hitPlane->material;
+        else if (hitPlane) {
+            N = GRY_VecDot(nRay, hitPlane->n) > 0.f ? hitPlane->n * -1.f : hitPlane->n;
+            mat = hitPlane->material;
+        }
 
         Vec3f eRay = nRay;
-        if (reflect < reflectionLimit && (hitPlane->material.reflect || hitPlane->material.refract)) {
-            if (hitPlane->material.refract) {
-                eRay = GRY_VecRefract(eRay, N, 1.f, hitPlane->material.refractIndex);
-                if (hitPlane->material.reflect) { eRay = eRay * -1.f; }
+        if (reflect < reflectionLimit && (mat.reflect || mat.refract)) {
+            if (mat.refract) {
+                eRay = GRY_VecRefract(eRay, N, 1.f, mat.refractIndex);
+                if (mat.reflect) { eRay *= -1.f; }
             }
-            if (hitPlane->material.reflect) {
+            if (mat.reflect) {
                 eRay = GRY_VecReflect(eRay, N);
             }
             Vec3f eOrigin = GRY_VecDot(eRay, N) < 0.f ? point - (N * 1e-3f) : point + (N * 1e-3f);
