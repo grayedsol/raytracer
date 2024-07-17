@@ -50,16 +50,16 @@ bool Scene::castRay(const Vec3f &origin, const Vec3f &nRay, GRY_Color& color, in
             mat = hitPlane->material;
         }
 
-        Vec3f eRay = nRay;
+        Vec3f rRay = nRay;
         if (reflect < reflectionLimit && (mat.reflect || mat.refract)) {
             if (mat.refract) {
-                eRay = GRY_VecRefract(eRay, N, 1.f, mat.refractIndex);
+                rRay = GRY_VecRefract(rRay, N, 1.f, mat.refractIndex);
             }
             if (mat.reflect) {
-                eRay = GRY_VecReflect(eRay, N);
+                rRay = GRY_VecReflect(rRay, N);
             }
-            Vec3f eOrigin = GRY_VecDot(eRay, N) < 0.f ? point - (N * 1e-3f) : point + (N * 1e-3f);
-            if (castRay(eOrigin, eRay, color, reflect+1)) { mat.diffuseColor = color; }
+            Vec3f eOrigin = GRY_VecDot(rRay, N) < 0.f ? point - (N * 1e-3f) : point + (N * 1e-3f);
+            if (castRay(eOrigin, rRay, color, reflect+1)) { mat.diffuseColor = color; }
         }
 
         color = blinnPhong(this, mat, N, point, origin, nRay);
