@@ -14,6 +14,7 @@ GRY_Color phong(const Scene* scene, const GRY_Material& material, const Vec3f& N
         Vec3f L = GRY_VecNormalize(light.position - point);
 
         Vec3f shadowPoint = GRY_VecDot(L, N) < 0 ? point - N*0.01f : point + N*0.01f;
+        /* The shadow is only valid if an object is within the distance of the point to the light itself. */
         float withinDistance = sqrtf(GRY_VecDistanceSq(shadowPoint, light.position));
         if (scene->castRay(shadowPoint, L, &withinDistance)) { continue; }
 
@@ -38,6 +39,7 @@ GRY_Color blinnPhong(const Scene* scene, const GRY_Material& material, const Vec
         Vec3f L = GRY_VecNormalize(light.position - point);
 
         Vec3f shadowPoint = GRY_VecDot(L, N) < 0 ? point - N*0.01f : point + N*0.01f;
+        /* The shadow is only valid if an object is within the distance of the point to the light itself. */
         float withinDistance = sqrtf(GRY_VecDistanceSq(shadowPoint, light.position));
         if (scene->castRay(shadowPoint, L, &withinDistance)) { continue; }
 
