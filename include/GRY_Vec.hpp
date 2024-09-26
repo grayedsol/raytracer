@@ -10,8 +10,8 @@ struct GRY_Vec {
 private:
     T data[N];
 public:
-    T& operator[](const size_t i) { return data[i]; }
-    const T& operator[](const size_t i) const { return data[i]; }
+    T& operator[](const uint i) { return data[i]; }
+    const T& operator[](const uint i) const { return data[i]; }
 };
 
 template<typename T>
