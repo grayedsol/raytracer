@@ -3,8 +3,8 @@
 Loosely based off of [ssloy/tinyraytracer](https://github.com/ssloy/tinyraytracer).
 
 ## Examples
-![planes](https://raw.githubusercontent.com/grayedsol/raytracer/refs/heads/master/examples/planes.png)
+![planes](examples/planes.png)
 
-![oceanOrange](https://raw.githubusercontent.com/grayedsol/raytracer/refs/heads/master/examples/oceanOrange.png)
+![oceanOrange](examples/oceanOrange.png)
 
-![purpleLightReflections](https://raw.githubusercontent.com/grayedsol/raytracer/refs/heads/master/examples/reflectionPurpleLight.png)
+![purpleLightReflections](examples/reflectionPurpleLight.png)
